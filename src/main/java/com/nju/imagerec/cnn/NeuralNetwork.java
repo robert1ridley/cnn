@@ -12,7 +12,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 import java.io.IOException;
-public class dp{
+public class NeuralNetwork{
 //Map<String, String> dictionary = new HashMap<String, String>();
 	public static double[][] w1;
 	public static double[] b1;
@@ -371,7 +371,7 @@ public static void main(String[] args) throws IOException {
     String TRAIN_LABELS_FILE = "train-labels.idx1-ubyte";
     String TEST_IMAGES_FILE = "t10k-images.idx3-ubyte";
     String TEST_LABELS_FILE = "t10k-labels.idx1-ubyte";
-	dp dp=new dp();
+	NeuralNetwork dp=new NeuralNetwork();
 	double[][] img_train = dp.getImages(TRAIN_IMAGES_FILE);  
     double[] train_labels = dp.getLabels(TRAIN_LABELS_FILE);   
 
@@ -396,7 +396,7 @@ public static void main(String[] args) throws IOException {
         dp.forward_propagation(imgvector);
         double costl=dp.costloss(label_train);  
         dp.back_propagation(imgvector, label_train); 
-        dp.update_para(ttt);  
+        dp.update_para(ttt);
     }
 	for(int t_i=0;t_i<10000;t_i++){
 		double[] img_train1=img_test[t_i];

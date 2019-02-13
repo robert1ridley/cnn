@@ -1,37 +1,41 @@
 package com.nju.imagerec.cnn;
 
 import java.io.IOException;
+import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
 
-import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.DoubleWritable;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 
-public class Map extends Mapper<LongWritable, Text, Text, IntWritable>{
+public class Map extends Mapper<LongWritable, Text, Text, DoubleWritable>{
 	
-//	public void setup() {
-//		
-//	}
-	
-	public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
-		String text = value.toString();
-		StringTokenizer stringTokenizer = new StringTokenizer(text);
+	public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException, NoSuchElementException {
 		
-		Text word = new Text();
-		int count = 0;
+		String sample = value.toString();
+		StringTokenizer stringTokenizer = new StringTokenizer(sample);
+		StringBuilder X = new StringBuilder(); 
+		
+		Double label = 0.0;
+//		double [] imageTrain = new double [784];
+		
+		int i = 0;
 		while (stringTokenizer.hasMoreTokens()) {
-			word.set(stringTokenizer.nextToken());
-			count += 1;
+			if (i == 784) {
+				label = Double.parseDouble(stringTokenizer.nextToken());
+			}
+			else {
+				X.append(stringTokenizer.nextToken());
+//				imageTrain[i] = Double.parseDouble(stringTokenizer.nextToken());
+			}
+			i++;
 		}
-		IntWritable newValue = new IntWritable(count);
-		String newKey = RandomStringUtils.randomAlphanumeric(20).toUpperCase();
-		Text newKeyText = new Text(newKey);
-		context.write(newKeyText, newValue);
+	
+		Text newkeyText = new Text (X.toString());
+		DoubleWritable newVal = new DoubleWritable (label);
+		
+		context.write(newkeyText, newVal);
 	}
 	
-//	public void cleanup() {
-//		context.write(newKeyText, newValue);
-//	}
 }
