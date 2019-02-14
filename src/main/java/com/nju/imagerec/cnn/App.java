@@ -18,7 +18,7 @@ import org.apache.hadoop.fs.Path;
 public class App {
     public static void main( String[] args ) throws IOException, ClassNotFoundException, InterruptedException, URISyntaxException {
         Configuration conf = new Configuration();
-//        conf.setInt(NLineInputFormat.LINES_PER_MAP, 1000);
+        conf.setInt(NLineInputFormat.LINES_PER_MAP, 1000);
         Job job = Job.getInstance(conf, "App");
         
         job.setJarByClass(App.class);

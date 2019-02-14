@@ -17,22 +17,16 @@ public class Map extends Mapper<LongWritable, Text, Text, DoubleWritable>{
 	double[][] img_train = new double [60000][784];
 	double[] train_labels = new double [60000];
 	
-	public void setup(Context context) {
-		count = 0;
-	}
-	
 	public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException, NoSuchElementException {
 		
 		String sample = value.toString();
 		StringTokenizer stringTokenizer = new StringTokenizer(sample);
 		StringBuilder X = new StringBuilder(); 
-		
-		Double label = 0.0;
 
 		int i = 0;
 		while (stringTokenizer.hasMoreTokens()) {
 			if (i == 784) {
-				label = Double.parseDouble(stringTokenizer.nextToken());
+				train_labels[count] = Double.parseDouble(stringTokenizer.nextToken());
 			}
 			else {
 				String term = stringTokenizer.nextToken();
@@ -42,11 +36,6 @@ public class Map extends Mapper<LongWritable, Text, Text, DoubleWritable>{
 			i++;
 		}
 		count ++;
-		
-	
-		Text newkeyText = new Text (X.toString());
-		DoubleWritable newVal = new DoubleWritable (label);
-
 	}
 	
 	public void cleanup(Context context) throws IOException, InterruptedException {
@@ -56,13 +45,12 @@ public class Map extends Mapper<LongWritable, Text, Text, DoubleWritable>{
 			imageTrain[i] = img_train[i];
 			trainLabels[i] = train_labels[i];
 		}
-		int ii=0;
 	    int n_x=784;
 	    int n_h=32;
 	    int n_y=10;
 	    NeuralNetwork neuralNetwork = new NeuralNetwork();
 	    neuralNetwork.initialize_with_zeros(n_x,n_h,n_y);
-		for(int i =0;i<imageTrain.length;i++){
+		for(int i = 0;i<imageTrain.length;i++){
 	        double label_train[]=new double[10];
 			for(int i1=0;i1<10;i1++){
 				label_train[i1]=0;
@@ -89,7 +77,7 @@ public class Map extends Mapper<LongWritable, Text, Text, DoubleWritable>{
 		double[][]w2 = neuralNetwork.w2;
 		for (Integer i = 0; i < w2.length; i++) {
 			for (Integer j = 0; j<w2[0].length; j++) {
-				context.write(new Text("w2" + "-" + i.toString() + "-" + j.toString()) , new DoubleWritable(w1[i][j]));
+				context.write(new Text("w2" + "-" + i.toString() + "-" + j.toString()) , new DoubleWritable(w2[i][j]));
 			}
 		}
 		
@@ -103,7 +91,6 @@ public class Map extends Mapper<LongWritable, Text, Text, DoubleWritable>{
 			context.write(new Text("b2" + "-" + i.toString()), new DoubleWritable(b2[i]));
 		}
 		
-		count = 0;
 	}
 	
 }

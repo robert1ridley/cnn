@@ -398,6 +398,15 @@ public static void main(String[] args) throws IOException {
         dp.back_propagation(imgvector, label_train); 
         dp.update_para(ttt);
     }
+	
+//	System.out.println(Arrays.toString(a1));
+//	System.out.println(Arrays.toString(z1));
+//	System.out.println(Arrays.toString(z2));
+//	System.out.println(Arrays.toString(a2));
+//	System.out.println(Arrays.toString(dz1));
+//	System.out.println(Arrays.toString(dz2));
+	
+	
 	for(int t_i=0;t_i<10000;t_i++){
 		double[] img_train1=img_test[t_i];
 		double[] vector_image=dp.narmalize_data(img_train1);
