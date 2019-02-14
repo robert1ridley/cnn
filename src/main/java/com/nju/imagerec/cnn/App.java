@@ -1,21 +1,24 @@
 package com.nju.imagerec.cnn;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 import org.apache.hadoop.io.DoubleWritable;
-//import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
+import org.apache.hadoop.mapreduce.lib.input.NLineInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.fs.Path;
 
 public class App {
-    public static void main( String[] args ) throws IOException, ClassNotFoundException, InterruptedException {
+    public static void main( String[] args ) throws IOException, ClassNotFoundException, InterruptedException, URISyntaxException {
         Configuration conf = new Configuration();
+        conf.setInt(NLineInputFormat.LINES_PER_MAP, 1000);
         Job job = Job.getInstance(conf, "App");
         
         job.setJarByClass(App.class);
@@ -27,10 +30,10 @@ public class App {
         
         job.setInputFormatClass(TextInputFormat.class);
         job.setOutputFormatClass(TextOutputFormat.class);
-        job.setNumReduceTasks(10);
+        job.setNumReduceTasks(1);
         
         Path outputPath = new Path(args[1]);
-        
+        job.addCacheFile(new URI("/test-images-labels-comb.txt"));
         FileInputFormat.addInputPath(job, new Path(args[0]));
         FileOutputFormat.setOutputPath(job, new Path(args[1]));
         
