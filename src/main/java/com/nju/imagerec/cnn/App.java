@@ -18,6 +18,7 @@ import org.apache.hadoop.fs.Path;
 public class App {
     public static void main( String[] args ) throws IOException, ClassNotFoundException, InterruptedException, URISyntaxException {
         Configuration conf = new Configuration();
+//        每一个mapper读1000行数据
         conf.setInt(NLineInputFormat.LINES_PER_MAP, 1000);
         Job job = Job.getInstance(conf, "App");
         
@@ -33,6 +34,7 @@ public class App {
         job.setNumReduceTasks(1);
         
         Path outputPath = new Path(args[1]);
+        //	用缓存存储测试数据（还不知道怎么用）
         job.addCacheFile(new URI("/test-images-labels-comb.txt"));
         FileInputFormat.addInputPath(job, new Path(args[0]));
         FileOutputFormat.setOutputPath(job, new Path(args[1]));
