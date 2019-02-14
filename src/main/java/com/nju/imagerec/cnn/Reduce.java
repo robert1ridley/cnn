@@ -7,6 +7,7 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 
 public class Reduce extends Reducer<Text, DoubleWritable, Text, DoubleWritable>{
+	// 这个还没实现，目前输入是数据和标签，但是目标就是算收到的权重的平均
 	
 	Double totalOccurrances = 0.0;
 	public void reduce(Text key, Iterable<DoubleWritable> values, Context context) throws IOException, InterruptedException {

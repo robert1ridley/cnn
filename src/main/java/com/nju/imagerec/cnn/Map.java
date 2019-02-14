@@ -41,6 +41,7 @@ public class Map extends Mapper<LongWritable, Text, Text, DoubleWritable>{
 		Text newkeyText = new Text (X.toString());
 		DoubleWritable newVal = new DoubleWritable (label);
 		
+		//目前输出是数据和标签，但是我们需要输出权重！
 		context.write(newkeyText, newVal);
 	}
 	
@@ -68,6 +69,8 @@ public class Map extends Mapper<LongWritable, Text, Text, DoubleWritable>{
 	        neuralNetwork.back_propagation(imgvector, label_train); 
 	        neuralNetwork.update_para(ttt);
 	    }
+		//目标是在这里把这个map算过的权重传给reduced，然后在Reducer里算所有收到的的权重的平均
+//		context.write(weights);
 	}
 	
 }
