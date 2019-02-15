@@ -22,6 +22,7 @@ public class Reduce extends Reducer<Text, DoubleWritable, Text, DoubleWritable>{
 	public void reduce(Text key, Iterable<DoubleWritable> values, Context context) throws IOException, InterruptedException {
 		Integer totalOccurrances = new Integer(0);
 		Double totalValue = new Double(0.0);
+		// 运算权重的平均
 		for (DoubleWritable value : values) {
 			String v = value.toString();
 			totalOccurrances = totalOccurrances + 1; 
@@ -49,6 +50,7 @@ public class Reduce extends Reducer<Text, DoubleWritable, Text, DoubleWritable>{
 		}
 	}
 	public void cleanup(Context context) throws IOException, InterruptedException {
+		// 从Distributed Cache读测试数据，做预测，算正确率
 		URI[] cacheFiles = context.getCacheFiles();
 		  if (cacheFiles != null && cacheFiles.length > 0) {
 		    try {
@@ -62,12 +64,14 @@ public class Reduce extends Reducer<Text, DoubleWritable, Text, DoubleWritable>{
 		    		neuralNetwork.b1 = b1;
 		    		neuralNetwork.b2 = b2;
 		    		
+		    		//测试数据
 		        FileSystem fs = FileSystem.get(context.getConfiguration());
 		        Path path = new Path(cacheFiles[0].toString());
 		        BufferedReader reader = new BufferedReader(new InputStreamReader(fs.open(path)));		        
 		        String s;
 		        Integer correct = 0;
 		        Integer total = 0;
+		        //读每一行测试数据
 		        while ((s=reader.readLine()) != null) {
 		        	
 			        	String sample = s.toString();
@@ -87,6 +91,7 @@ public class Reduce extends Reducer<Text, DoubleWritable, Text, DoubleWritable>{
 			    			}
 			    			i++;
 			    		}
+			    		//做预测和算正确率
 			    		double [] vectorImage = neuralNetwork.narmalize_data(imageTest);
 		    			neuralNetwork.forward_propagation(vectorImage);
 		    			double predict_value = neuralNetwork.softmax(neuralNetwork.a2);

@@ -18,10 +18,9 @@ public class Map extends Mapper<LongWritable, Text, Text, DoubleWritable>{
 	double[] train_labels = new double [60000];
 	
 	public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException, NoSuchElementException {
-		
+		// 一行一行读数据 （每一行数据最后值是标签）
 		String sample = value.toString();
 		StringTokenizer stringTokenizer = new StringTokenizer(sample);
-		StringBuilder X = new StringBuilder(); 
 
 		int i = 0;
 		while (stringTokenizer.hasMoreTokens()) {
@@ -30,7 +29,6 @@ public class Map extends Mapper<LongWritable, Text, Text, DoubleWritable>{
 			}
 			else {
 				String term = stringTokenizer.nextToken();
-				X.append(term);
 				img_train[count][i] = Double.parseDouble(term);
 			}
 			i++;
@@ -67,6 +65,7 @@ public class Map extends Mapper<LongWritable, Text, Text, DoubleWritable>{
 	        neuralNetwork.update_para(ttt);
 	    }
 		
+		// 把权重传给 Reducer
 		double[][]w1 = neuralNetwork.w1;
 		for (Integer i = 0; i < w1.length; i++) {
 			for (Integer j = 0; j<w1[0].length; j++) {

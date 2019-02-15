@@ -10,7 +10,6 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
-import org.apache.hadoop.mapreduce.lib.input.NLineInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.fs.Path;
@@ -18,7 +17,6 @@ import org.apache.hadoop.fs.Path;
 public class App {
     public static void main( String[] args ) throws IOException, ClassNotFoundException, InterruptedException, URISyntaxException {
         Configuration conf = new Configuration();
-        conf.setInt(NLineInputFormat.LINES_PER_MAP, 1000);
         Job job = Job.getInstance(conf, "App");
         
         job.setJarByClass(App.class);
@@ -33,7 +31,7 @@ public class App {
         job.setNumReduceTasks(1);
         
         Path outputPath = new Path(args[1]);
-        //	用缓存存储测试数据（还不知道怎么用）
+        //	用缓存存储测试数据
         job.addCacheFile(new URI("/test-images-labels-comb.txt"));
         FileInputFormat.addInputPath(job, new Path(args[0]));
         FileOutputFormat.setOutputPath(job, new Path(args[1]));
