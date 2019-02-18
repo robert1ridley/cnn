@@ -1,4 +1,4 @@
-package com.nju.imagerec.cnn;
+package neuralnet;
 
 import java.io.BufferedReader;
 import java.io.IOException;

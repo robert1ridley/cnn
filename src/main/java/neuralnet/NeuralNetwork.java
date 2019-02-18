@@ -1,4 +1,4 @@
-package com.nju.imagerec.cnn;
+package neuralnet;
 
 import java.lang.Math;
 import java.util.HashMap;
